@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Post New Placement Drive{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="card card-clean bg-white shadow-sm">
+        <div class="card-header-clean p-4 border-bottom d-flex justify-content-between align-items-center">
+          <div>
+            <h4 class="fw-bold mb-1 text-dark">Post New Campus Recruitment Drive</h4>
+            <p class="text-muted small mb-0">Publish an opening with eligibility thresholds for eligible students to view and apply.</p>
+          </div>
+          <span class="badge bg-light text-primary border border-primary-subtle p-2">
+            <i class="bi bi-briefcase-fill me-1"></i> New Opening
+          </span>
+        </div>
+
+        <div class="card-body p-4">
+          <form method="POST" action="{{ url_for('post_job') }}">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="company_name" class="form-label">Company Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="company_name" name="company_name" placeholder="e.g. Google / Microsoft / TCS" value="{{ form.company_name if form else '' }}" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="role_title" class="form-label">Job Role Title <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="role_title" name="role_title" placeholder="e.g. Graduate Software Engineer" value="{{ form.role_title if form else '' }}" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="location" class="form-label">Job Location(s) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="location" name="location" placeholder="e.g. Bengaluru / Hyderabad / Remote" value="{{ form.location if form else '' }}" required>
+              </div>
+
+              <div class="col-md-3">
+                <label for="package_lpa" class="form-label">Package (CTC in LPA) <span class="text-danger">*</span></label>
+                <input type="number" step="0.1" min="0.5" class="form-control" id="package_lpa" name="package_lpa" placeholder="e.g. 14.5" value="{{ form.package_lpa if form else '' }}" required>
+              </div>
+
+              <div class="col-md-3">
+                <label for="min_cgpa" class="form-label">Minimum CGPA Required <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" min="0" max="10" class="form-control" id="min_cgpa" name="min_cgpa" placeholder="e.g. 7.5" value="{{ form.min_cgpa if form else '7.0' }}" required>
+                <div class="form-hint">Scale 0 - 10</div>
+              </div>
+
+              <div class="col-md-8">
+                <label for="eligible_branches" class="form-label">Eligible Academic Branches <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="eligible_branches" name="eligible_branches" placeholder="e.g. Computer Science, Information Technology, Electronics & Communication" value="{{ form.eligible_branches if form else 'Computer Science, Information Technology, Electronics & Communication' }}" required>
+                <div class="form-hint">Enter comma-separated branches or type "All Branches"</div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="deadline" class="form-label">Application Deadline <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="deadline" name="deadline" value="{{ form.deadline if form else '' }}" required>
+              </div>
+
+              <div class="col-12">
+                <label for="description" class="form-label">Detailed Job Description &amp; Requirements <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="description" name="description" rows="6" placeholder="Specify role responsibilities, required skills, interview rounds, bond details, or special requirements..." required>{{ form.description if form else '' }}</textarea>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="{{ url_for('admin_dashboard') }}" class="btn btn-light border">
+                <i class="bi bi-arrow-left me-1"></i> Cancel &amp; Return
+              </a>
+              <button type="submit" class="btn btn-primary px-4">
+                <i class="bi bi-cloud-arrow-up me-1"></i> Publish Opening
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

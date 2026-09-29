@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.role_title }} at {{ job.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <!-- Back navigation -->
+  <div class="mb-3">
+    <a href="{{ url_for('job_list') }}" class="text-primary text-decoration-none small fw-semibold">
+      <i class="bi bi-arrow-left me-1"></i> Back to all openings
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Details & Description -->
+    <div class="col-lg-8">
+      <!-- Job Header Card -->
+      <div class="card card-clean mb-4 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+          <div>
+            <span class="badge bg-light text-primary border border-primary-subtle fw-semibold mb-2">Campus Recruitment Drive</span>
+            <h3 class="fw-bold text-dark mb-1">{{ job.role_title }}</h3>
+            <div class="fs-5 text-secondary fw-semibold mb-2">{{ job.company_name }}</div>
+          </div>
+          <div class="text-lg-end">
+            <span class="fs-4 fw-bold text-primary">{{ "%.1f"|format(job.package_lpa) }} LPA</span>
+            <div class="text-muted small">Annual CTC Package</div>
+          </div>
+        </div>
+
+        <div class="row g-2 pt-2 border-top">
+          <div class="col-sm-6 col-md-3">
+            <div class="text-muted small">Location</div>
+            <div class="fw-semibold text-dark"><i class="bi bi-geo-alt me-1 text-primary"></i>{{ job.location }}</div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="text-muted small">Minimum CGPA</div>
+            <div class="fw-semibold text-dark"><i class="bi bi-mortarboard me-1 text-primary"></i>{{ "%.2f"|format(job.min_cgpa) }}</div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="text-muted small">Deadline</div>
+            <div class="fw-semibold text-dark"><i class="bi bi-calendar-event me-1 text-primary"></i>{{ job.deadline }}</div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="text-muted small">Applicants</div>
+            <div class="fw-semibold text-dark"><i class="bi bi-people me-1 text-primary"></i>{{ applicant_count }} Registered</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eligibility Criteria Card -->
+      <div class="card card-clean mb-4 bg-white p-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-check2-square text-primary me-2"></i>Eligibility Criteria</h5>
+        
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded border">
+              <div class="text-muted small mb-1">Eligible Academic Branches</div>
+              <div class="fw-bold text-dark">{{ job.eligible_branches }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded border">
+              <div class="text-muted small mb-1">Academic Cut-off (CGPA)</div>
+              <div class="fw-bold text-dark">{{ "%.2f"|format(job.min_cgpa) }} / 10.0 or higher</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Eligibility Status Evaluation -->
+        {% if current_student %}
+          <div class="p-3 rounded border {% if is_eligible %}bg-success-subtle border-success-subtle{% else %}bg-danger-subtle border-danger-subtle{% endif %}">
+            <div class="d-flex align-items-start gap-2">
+              {% if is_eligible %}
+                <i class="bi bi-check-circle-fill text-success fs-5 mt-1"></i>
+                <div>
+                  <strong class="text-success">You meet all eligibility requirements for this position!</strong>
+                  <div class="small text-muted">Your CGPA ({{ "%.2f"|format(current_student.cgpa) }}) and branch ({{ current_student.branch }}) satisfy the company criteria.</div>
+                </div>
+              {% else %}
+                <i class="bi bi-exclamation-triangle-fill text-danger fs-5 mt-1"></i>
+                <div>
+                  <strong class="text-danger">You do not meet the criteria for this opening:</strong>
+                  <ul class="mb-0 small text-danger ps-3 mt-1">
+                    {% for reason in reasons %}
+                      <li>{{ reason }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <div class="p-3 rounded bg-light border text-muted small">
+            <i class="bi bi-info-circle me-1 text-primary"></i>
+            <a href="{{ url_for('student_login', next=request.path) }}" class="fw-semibold text-primary">Sign in as a student</a> to automatically check your branch and CGPA eligibility.
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Job Description Card -->
+      <div class="card card-clean bg-white p-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-file-text text-primary me-2"></i>Job Description &amp; Responsibilities</h5>
+        <div class="text-muted" style="line-height: 1.7; white-space: pre-line;">
+          {{ job.description }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Action Box & Summary -->
+    <div class="col-lg-4">
+      <div class="card card-clean bg-white p-4 sticky-top" style="top: 80px;">
+        <h5 class="fw-bold text-dark mb-3">Application Status</h5>
+
+        {% if current_student %}
+          {% if existing_application %}
+            <!-- Already Applied -->
+            <div class="text-center py-3">
+              <div class="mb-2">
+                <i class="bi bi-check-circle-fill text-primary fs-1"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">Application Submitted</h5>
+              <div class="mb-3">
+                <span class="badge-status-{{ existing_application.status|lower }} px-3 py-2 fs-6">
+                  Current Status: {{ existing_application.status }}
+                </span>
+              </div>
+              <p class="text-muted small">Applied on {{ existing_application.applied_at[:10] }}. Your profile has been shared with the company recruitment panel.</p>
+              <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-primary btn-sm w-100">
+                <i class="bi bi-speedometer2 me-1"></i> View on Dashboard
+              </a>
+            </div>
+
+          {% elif is_eligible %}
+            <!-- Eligible and can apply -->
+            <div>
+              <div class="alert alert-success py-2 px-3 small mb-3">
+                <i class="bi bi-check-all me-1"></i> You are verified as eligible to participate in this drive.
+              </div>
+
+              <form method="POST" action="{{ url_for('apply_job', job_id=job.id) }}">
+                <div class="mb-3 small text-muted">
+                  By applying, your registered academic records (CGPA: <strong>{{ "%.2f"|format(current_student.cgpa) }}</strong>, Branch: <strong>{{ current_student.branch }}</strong>, Resume Link) will be forwarded to the recruitment team.
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                  <i class="bi bi-send-fill me-1"></i> Submit Application Now
+                </button>
+              </form>
+            </div>
+
+          {% else %}
+            <!-- Ineligible -->
+            <div>
+              <div class="alert alert-secondary py-2 px-3 small mb-3">
+                <i class="bi bi-slash-circle me-1"></i> Applications are restricted to eligible candidates only.
+              </div>
+              <button class="btn btn-secondary w-100 py-2" disabled>
+                Ineligible to Apply
+              </button>
+              <div class="form-hint text-center mt-2">
+                Update your branch or academic scores in your <a href="{{ url_for('profile') }}">profile</a> if entered erroneously.
+              </div>
+            </div>
+          {% endif %}
+
+        {% elif current_role == 'admin' %}
+          <div class="text-center py-3">
+            <span class="badge bg-dark mb-2">Administrator Mode</span>
+            <p class="small text-muted mb-3">You are logged in as Placement Cell Admin.</p>
+            <a href="{{ url_for('view_applicants', job_id=job.id) }}" class="btn btn-outline-primary btn-sm w-100 mb-2">
+              <i class="bi bi-people-fill me-1"></i> View All Applicants ({{ applicant_count }})
+            </a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-light border btn-sm w-100">
+              Back to Admin Dashboard
+            </a>
+          </div>
+
+        {% else %}
+          <div>
+            <p class="small text-muted mb-3">Please sign in with your student credentials to verify eligibility and submit your application.</p>
+            <a href="{{ url_for('student_login', next=request.path) }}" class="btn btn-primary w-100 mb-2">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Apply
+            </a>
+            <a href="{{ url_for('student_register') }}" class="btn btn-outline-primary btn-sm w-100">
+              Create Student Account
+            </a>
+          </div>
+        {% endif %}
+
+        <hr class="my-3">
+
+        <div class="small text-muted">
+          <div class="mb-1"><i class="bi bi-shield-lock me-1"></i> Direct Campus Recruitment</div>
+          <div><i class="bi bi-info-circle me-1"></i> Managed by University Placement Cell</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

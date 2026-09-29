@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Placement Cell Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <!-- Admin Header Bar -->
+  <div class="card card-clean mb-4 bg-white p-4">
+    <div class="row align-items-center">
+      <div class="col-md-7 mb-3 mb-md-0">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; min-width: 52px;">
+            <i class="bi bi-shield-lock-fill fs-3"></i>
+          </div>
+          <div>
+            <h4 class="fw-bold mb-1 text-dark">Placement Cell Management</h4>
+            <p class="text-muted small mb-0">Overview of campus recruitment drives, applicant screenings, and company listings.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5 text-md-end">
+        <a href="{{ url_for('post_job') }}" class="btn btn-primary btn-sm">
+          <i class="bi bi-plus-lg me-1"></i> Post New Job Opening
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metric Overview Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="metric-box">
+        <div class="metric-label">ACTIVE OPENINGS</div>
+        <div class="metric-number">{{ metrics.total_jobs }}</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="metric-box">
+        <div class="metric-label">REGISTERED STUDENTS</div>
+        <div class="metric-number">{{ metrics.total_students }}</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="metric-box">
+        <div class="metric-label">TOTAL APPLICATIONS</div>
+        <div class="metric-number text-primary">{{ metrics.total_applications }}</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="metric-box">
+        <div class="metric-label">TOTAL SELECTIONS</div>
+        <div class="metric-number text-success">{{ metrics.selected_count }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Job Openings Table -->
+  <div class="card card-clean mb-4 bg-white">
+    <div class="card-header-clean d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-building text-primary fs-5"></i>
+        <span>All Campus Recruitment Postings</span>
+      </div>
+      <span class="badge bg-light text-muted border">{{ jobs|length }} Total Drives</span>
+    </div>
+
+    <div class="card-body p-0">
+      {% if jobs %}
+        <div class="table-responsive">
+          <table class="table table-placement table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Company &amp; Role</th>
+                <th>Package</th>
+                <th>Min CGPA</th>
+                <th>Eligible Branches</th>
+                <th>Deadline</th>
+                <th class="text-center">Applicants</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for job in jobs %}
+                <tr>
+                  <td>
+                    <div class="fw-bold text-dark">{{ job.company_name }}</div>
+                    <div class="small text-muted">{{ job.role_title }} &bull; {{ job.location }}</div>
+                  </td>
+                  <td>
+                    <span class="fw-semibold text-primary">{{ "%.1f"|format(job.package_lpa) }} LPA</span>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border">{{ "%.2f"|format(job.min_cgpa) }}</span>
+                  </td>
+                  <td>
+                    <span class="small text-muted text-truncate d-inline-block" style="max-width: 220px;" title="{{ job.eligible_branches }}">
+                      {{ job.eligible_branches }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="small text-muted">{{ job.deadline }}</span>
+                  </td>
+                  <td class="text-center">
+                    <a href="{{ url_for('view_applicants', job_id=job.id) }}" class="btn btn-sm btn-light border text-primary fw-semibold position-relative">
+                      <i class="bi bi-people-fill me-1"></i>
+                      <span>{{ job.applicant_count }}</span>
+                    </a>
+                  </td>
+                  <td class="text-end">
+                    <div class="d-inline-flex gap-1">
+                      <a href="{{ url_for('view_applicants', job_id=job.id) }}" class="btn btn-sm btn-outline-primary" title="View & Manage Applicants">
+                        Review ({{ job.applicant_count }})
+                      </a>
+                      <form method="POST" action="{{ url_for('delete_job', job_id=job.id) }}" class="form-confirm-delete d-inline" data-entity-name="{{ job.company_name }} - {{ job.role_title }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job Opening">
+                          <i class="bi bi-trash3"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="p-5 text-center text-muted">
+          <i class="bi bi-folder2-open fs-1 text-secondary d-block mb-2"></i>
+          <h5 class="fw-bold text-dark">No Job Postings Found</h5>
+          <p class="small mb-3">Create your first campus recruitment drive posting.</p>
+          <a href="{{ url_for('post_job') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Create Posting
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,327 @@
+/* Naukri-Style Campus Placement Portal CSS */
+
+:root {
+  /* Primary Blue Palette */
+  --primary-blue: #1d4ed8;
+  --primary-blue-hover: #1e40af;
+  --primary-blue-light: #eff6ff;
+  --primary-blue-border: #bfdbfe;
+  
+  /* Neutral Canvas & Surface Colors */
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --border-color: #e2e8f0;
+  --border-color-darker: #cbd5e1;
+  
+  /* High Contrast Text */
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-light: #64748b;
+  
+  /* Semantic Status Accents */
+  --status-applied-bg: #eff6ff;
+  --status-applied-text: #1d4ed8;
+  --status-applied-border: #bfdbfe;
+
+  --status-shortlisted-bg: #fffbeb;
+  --status-shortlisted-text: #b45309;
+  --status-shortlisted-border: #fde68a;
+
+  --status-selected-bg: #ecfdf5;
+  --status-selected-text: #047857;
+  --status-selected-border: #a7f3d0;
+
+  --status-rejected-bg: #fef2f2;
+  --status-rejected-text: #b91c1c;
+  --status-rejected-border: #fecaca;
+
+  /* Bootstrap Variable Overrides */
+  --bs-primary: #1d4ed8;
+  --bs-primary-rgb: 29, 78, 216;
+  --bs-link-color: #1d4ed8;
+  --bs-link-hover-color: #1e40af;
+  --bs-body-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --bs-body-color: var(--text-main);
+  --bs-body-bg: var(--bg-page);
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--bs-body-font-family);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* Custom Navigation Bar */
+.navbar-placement {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary-blue) !important;
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-brand .brand-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--primary-blue-light);
+  color: var(--primary-blue);
+  border: 1px solid var(--primary-blue-border);
+}
+
+.nav-link {
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0.5rem 0.85rem !important;
+  transition: color 0.15s ease-in-out;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--primary-blue) !important;
+}
+
+/* Primary Button Styling */
+.btn-primary {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.5rem 1.15rem;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--primary-blue-hover) !important;
+  border-color: var(--primary-blue-hover) !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-blue);
+  color: #ffffff;
+}
+
+/* Card Styling */
+.card-clean {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.card-header-clean {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Metric Stats Cards */
+.metric-box {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.25rem;
+  height: 100%;
+}
+
+.metric-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  line-height: 1.1;
+  margin-top: 0.25rem;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Job Card Styling */
+.job-item-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.job-item-card:hover {
+  border-color: var(--border-color-darker);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.job-company {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.job-role {
+  font-size: 0.95rem;
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+.job-detail-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background-color: var(--bg-subtle);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+/* Status Badges */
+.badge-status-applied {
+  background-color: var(--status-applied-bg);
+  color: var(--status-applied-text);
+  border: 1px solid var(--status-applied-border);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+}
+
+.badge-status-shortlisted {
+  background-color: var(--status-shortlisted-bg);
+  color: var(--status-shortlisted-text);
+  border: 1px solid var(--status-shortlisted-border);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+}
+
+.badge-status-selected {
+  background-color: var(--status-selected-bg);
+  color: var(--status-selected-text);
+  border: 1px solid var(--status-selected-border);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+}
+
+.badge-status-rejected {
+  background-color: var(--status-rejected-bg);
+  color: var(--status-rejected-text);
+  border: 1px solid var(--status-rejected-border);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+}
+
+/* Eligibility Badges */
+.badge-eligible {
+  background-color: var(--status-selected-bg);
+  color: var(--status-selected-text);
+  border: 1px solid var(--status-selected-border);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+}
+
+.badge-ineligible {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: 1px solid var(--border-color);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+}
+
+/* Form Styles */
+.form-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+}
+
+.form-hint {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+}
+
+/* Tables */
+.table-placement {
+  border-color: var(--border-color);
+  vertical-align: middle;
+}
+
+.table-placement th {
+  background-color: #f8fafc;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+}
+
+.table-placement td {
+  padding: 0.85rem 1rem;
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+/* Footer */
+.footer-placement {
+  background-color: #ffffff;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-light);
+  font-size: 0.85rem;
+  padding: 1.25rem 0;
+  margin-top: 3rem;
+}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-clean bg-white shadow-sm">
+        <div class="card-header-clean p-4 border-bottom d-flex justify-content-between align-items-center">
+          <div>
+            <h4 class="fw-bold mb-1 text-dark">Student Placement Profile</h4>
+            <p class="text-muted small mb-0">Keep your academic records, skills, and resume updated for recruitment screenings.</p>
+          </div>
+          <span class="badge bg-light text-primary border border-primary-subtle p-2">
+            <i class="bi bi-shield-check me-1"></i> Verified Account
+          </span>
+        </div>
+
+        <div class="card-body p-4">
+          <form method="POST" action="{{ url_for('profile') }}">
+            <!-- Read-only University Identifiers -->
+            <div class="row g-3 mb-4 p-3 bg-light rounded border">
+              <div class="col-md-6">
+                <label class="form-label text-muted">College Email (Fixed)</label>
+                <input type="text" class="form-control bg-white" value="{{ student.email }}" disabled>
+                <div class="form-hint">University email cannot be changed.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted">Roll Number (Fixed)</label>
+                <input type="text" class="form-control bg-white" value="{{ student.roll_number }}" disabled>
+                <div class="form-hint">Contact placement cell if roll number is incorrect.</div>
+              </div>
+            </div>
+
+            <!-- Editable Fields -->
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ student.name }}" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="phone" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                <input type="tel" class="form-control" id="phone" name="phone" value="{{ student.phone }}" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="branch" class="form-label">Academic Branch <span class="text-danger">*</span></label>
+                <select class="form-select" id="branch" name="branch" required>
+                  <option value="Computer Science" {% if student.branch == 'Computer Science' %}selected{% endif %}>Computer Science &amp; Engineering (CSE)</option>
+                  <option value="Information Technology" {% if student.branch == 'Information Technology' %}selected{% endif %}>Information Technology (IT)</option>
+                  <option value="Electronics & Communication" {% if student.branch == 'Electronics & Communication' %}selected{% endif %}>Electronics &amp; Communication (ECE)</option>
+                  <option value="Electrical" {% if student.branch == 'Electrical' %}selected{% endif %}>Electrical Engineering (EE)</option>
+                  <option value="Mechanical" {% if student.branch == 'Mechanical' %}selected{% endif %}>Mechanical Engineering (ME)</option>
+                  <option value="Civil" {% if student.branch == 'Civil' %}selected{% endif %}>Civil Engineering (CE)</option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label for="batch_year" class="form-label">Batch Year <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="batch_year" name="batch_year" min="2020" max="2030" value="{{ student.batch_year }}" required>
+              </div>
+
+              <div class="col-md-3">
+                <label for="cgpa" class="form-label">Current CGPA <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" min="0" max="10" class="form-control" id="cgpa" name="cgpa" value="{{ '%.2f'|format(student.cgpa) }}" required>
+                <div class="form-hint">Scale of 0.0 - 10.0</div>
+              </div>
+
+              <div class="col-12">
+                <label for="skills" class="form-label">Technical Skills (comma-separated)</label>
+                <input type="text" class="form-control" id="skills" name="skills" value="{{ student.skills or '' }}" placeholder="e.g. Python, SQL, C++, React, Git">
+                <div class="form-hint">Separate skills with commas.</div>
+              </div>
+
+              <div class="col-12">
+                <label for="resume_link" class="form-label">Resume Link</label>
+                <div class="input-group">
+                  <input type="url" class="form-control" id="resume_link" name="resume_link" value="{{ student.resume_link or '' }}" placeholder="https://drive.google.com/your-resume-link">
+                  {% if student.resume_link %}
+                    <a href="{{ student.resume_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary">
+                      <i class="bi bi-box-arrow-up-right me-1"></i> View Current
+                    </a>
+                  {% endif %}
+                </div>
+                <div class="form-hint">Publicly accessible Google Drive / OneDrive or portfolio URL.</div>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="{{ url_for('student_dashboard') }}" class="btn btn-light border">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+              </a>
+              <button type="submit" class="btn btn-primary px-4">
+                <i class="bi bi-save me-1"></i> Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

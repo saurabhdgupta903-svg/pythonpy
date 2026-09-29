@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Campus Placement Openings{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <!-- Search & Filter Card -->
+  <div class="card card-clean mb-4 bg-white p-4">
+    <div class="row align-items-center mb-3">
+      <div class="col-md-7">
+        <h4 class="fw-bold text-dark mb-1">Campus Placement Openings</h4>
+        <p class="text-muted small mb-0">Browse corporate recruitment drives and check eligibility criteria.</p>
+      </div>
+      <div class="col-md-5 text-md-end text-muted small">
+        <span class="fw-semibold text-primary fs-5">{{ jobs|length }}</span> openings listed
+      </div>
+    </div>
+
+    <form method="GET" action="{{ url_for('job_list') }}" class="row g-2">
+      <div class="col-lg-6 col-md-5">
+        <div class="input-group">
+          <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control border-start-0 ps-0" name="q" placeholder="Search by company name, role title, or location..." value="{{ query }}">
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-4">
+        <select class="form-select" name="branch">
+          <option value="" {% if not branch_filter %}selected{% endif %}>All Branches</option>
+          <option value="Computer Science" {% if branch_filter == 'Computer Science' %}selected{% endif %}>Computer Science (CSE)</option>
+          <option value="Information Technology" {% if branch_filter == 'Information Technology' %}selected{% endif %}>Information Technology (IT)</option>
+          <option value="Electronics" {% if branch_filter == 'Electronics' %}selected{% endif %}>Electronics &amp; Communication (ECE)</option>
+          <option value="Electrical" {% if branch_filter == 'Electrical' %}selected{% endif %}>Electrical (EE)</option>
+          <option value="Mechanical" {% if branch_filter == 'Mechanical' %}selected{% endif %}>Mechanical (ME)</option>
+          <option value="Civil" {% if branch_filter == 'Civil' %}selected{% endif %}>Civil (CE)</option>
+        </select>
+      </div>
+
+      <div class="col-lg-2 col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary w-100">
+          Filter
+        </button>
+        {% if query or branch_filter %}
+          <a href="{{ url_for('job_list') }}" class="btn btn-outline-secondary" title="Reset Filters">
+            <i class="bi bi-x-lg"></i>
+          </a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Job Listings -->
+  {% if jobs %}
+    <div class="row">
+      {% for job in jobs %}
+        {% set status_info = eligibility_map.get(job.id) if eligibility_map else None %}
+        <div class="col-12">
+          <div class="job-item-card">
+            <div class="row align-items-center">
+              <div class="col-lg-8 col-md-7 mb-3 mb-md-0">
+                <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                  <span class="job-company">{{ job.company_name }}</span>
+                  
+                  {% if current_student and status_info %}
+                    {% if status_info.applied %}
+                      <span class="badge-status-applied"><i class="bi bi-check2 me-1"></i>Applied</span>
+                    {% elif status_info.eligible %}
+                      <span class="badge-eligible"><i class="bi bi-check-circle me-1"></i>Eligible to Apply</span>
+                    {% else %}
+                      <span class="badge-ineligible" title="{{ status_info.reasons|join(', ') }}">
+                        <i class="bi bi-slash-circle me-1"></i>Not Eligible
+                      </span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+
+                <div class="job-role mb-2">{{ job.role_title }}</div>
+
+                <div class="d-flex flex-wrap gap-2 text-muted small mb-2">
+                  <span class="job-detail-chip">
+                    <i class="bi bi-currency-rupee text-primary"></i>
+                    <strong>{{ "%.1f"|format(job.package_lpa) }} LPA</strong>
+                  </span>
+                  <span class="job-detail-chip">
+                    <i class="bi bi-geo-alt"></i> {{ job.location }}
+                  </span>
+                  <span class="job-detail-chip">
+                    <i class="bi bi-mortarboard"></i> Min CGPA: <strong>{{ "%.2f"|format(job.min_cgpa) }}</strong>
+                  </span>
+                  <span class="job-detail-chip">
+                    <i class="bi bi-calendar-event"></i> Deadline: <strong>{{ job.deadline }}</strong>
+                  </span>
+                </div>
+
+                <div class="text-muted small">
+                  <strong>Eligible Branches:</strong> {{ job.eligible_branches }}
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-md-5 text-md-end">
+                <div class="d-flex flex-column align-items-md-end gap-2">
+                  <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-outline-primary btn-sm px-3">
+                    View Details &amp; Apply <i class="bi bi-chevron-right ms-1"></i>
+                  </a>
+                  
+                  {% if current_student and status_info and not status_info.eligible and not status_info.applied %}
+                    <span class="text-danger small" style="font-size: 0.78rem;">
+                      <i class="bi bi-exclamation-circle me-1"></i>{{ status_info.reasons[0] }}
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card card-clean p-5 text-center bg-white">
+      <i class="bi bi-briefcase fs-1 text-muted mb-2"></i>
+      <h5 class="fw-bold text-dark">No Job Openings Found</h5>
+      <p class="text-muted small mb-3">No recruitment postings match your search filters.</p>
+      <div>
+        <a href="{{ url_for('job_list') }}" class="btn btn-outline-primary btn-sm">Clear All Filters</a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
